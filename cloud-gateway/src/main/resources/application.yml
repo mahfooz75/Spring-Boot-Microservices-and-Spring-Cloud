@@ -6,10 +6,13 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      routes:
+      - id: users-status-check
+        uri: lb://user-service
+        predicates:          - Path=/users/status/check
+          - Method=GET
+        filters:          - RemoveRequestHeader=Coockie
+        
 
 eureka:
   client:
