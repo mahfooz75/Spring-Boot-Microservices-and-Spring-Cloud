@@ -12,6 +12,13 @@ spring:
         predicates:          - Path=/users/status/check
           - Method=GET
         filters:          - RemoveRequestHeader=Coockie
+      - id: account-status-check
+        uri: lb://account-management-service
+        predicates:
+          - Path=/account/status/check
+          - Method=GET
+        filters:
+          - RemoveRequestHeader=Coockie
         
 
 eureka:
