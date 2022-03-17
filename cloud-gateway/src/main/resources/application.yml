@@ -9,14 +9,14 @@ spring:
       routes:
       - id: users-status-check
         uri: lb://user-service
-        predicates:          - Path=/users/status/check
-          - Method=GET
+        predicates:          - Path=/users/**
+          - Method=GET, POST
         filters:          - RemoveRequestHeader=Coockie
       - id: account-status-check
         uri: lb://account-management-service
         predicates:
-          - Path=/account/status/check
-          - Method=GET
+          - Path=/account/**
+          - Method=GET, POST, PUT, DELETE
         filters:
           - RemoveRequestHeader=Coockie
         
