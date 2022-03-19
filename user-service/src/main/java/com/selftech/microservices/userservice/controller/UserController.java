@@ -25,7 +25,7 @@ import com.selftech.microservices.userservice.shared.Util;
 public class UserController {
 
 	@Autowired
-	Environment env;
+	private Environment env;
 
 	@Autowired
 	private UserService userService;

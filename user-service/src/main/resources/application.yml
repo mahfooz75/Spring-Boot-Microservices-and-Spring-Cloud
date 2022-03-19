@@ -22,3 +22,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8010/eureka
+      
+token:
+  expiration_time: 864000000 # 10 days
+  secret: hgfhjfhyutyru676gfcstwr5;
