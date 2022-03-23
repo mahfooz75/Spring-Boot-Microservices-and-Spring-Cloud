@@ -6,17 +6,48 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
       routes:
+      - id: user-status-check
+        uri: lb://user-service
+        predicates:          - Path=/user-service/users/status/check
+          - Method=GET, POST
+          - Header=Authorization, Bearer (.*)
+        filters:          - RemoveRequestHeader=Coockie
+          - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+          - AuthorizationHeaderFilter
+      
       - id: user-service
         uri: lb://user-service
-        predicates:          - Path=/users/**
-          - Method=GET, POST
-        filters:          - RemoveRequestHeader=Coockie
-
+        predicates:
+          - Path=/user-service/users
+          - Method=POST
+        filters:
+          - RemoveRequestHeader=Coockie
+          - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+      
+      - id: user-service-login
+        uri: lb://user-service
+        predicates:
+          - Path=/user-service/users/login
+          - Method=POST
+        filters:
+          - RemoveRequestHeader=Coockie
+          - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+          
+      - id: user-service-get-update-delete
+        uri: lb://user-service
+        predicates:
+          - Path=/user-service/users/**
+          - Method=GET,PUT,DELETE
+        filters:
+          - RemoveRequestHeader=Coockie
+          - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+          - AuthorizationHeaderFilter
+          
       - id: account-status-check
         uri: lb://account-management-service
         predicates:
@@ -29,4 +60,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8010/eureka
-      
+
+token:
+  secret: hgfhjfhyutyru676gfcstwr5;      
