@@ -26,3 +26,7 @@ eureka:
 token:
   expiration_time: 864000000 # 10 days
   secret: hgfhjfhyutyru676gfcstwr5;
+  
+login:
+  url:
+    path: /users/login
