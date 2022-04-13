@@ -30,3 +30,9 @@ token:
 login:
   url:
     path: /users/login
+    
+ip:
+  address: host.docker.internal # 127.0.0.1
+    
+albums:
+  url: http://ALBUMS-WS/users/%s/albums

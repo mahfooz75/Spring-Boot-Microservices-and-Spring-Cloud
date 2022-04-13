@@ -1,6 +1,9 @@
 package com.selftech.microservices.userservice.shared;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.selftech.microservices.userservice.model.AlbumResponseModel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,4 +23,5 @@ public class UserDto implements Serializable{
 	private String email;
 	private String userId;
 	private String encryptedPassword;
+	private List<AlbumResponseModel> albums;
 }
