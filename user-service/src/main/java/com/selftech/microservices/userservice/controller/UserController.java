@@ -55,5 +55,14 @@ public class UserController {
 		UserResponseModel userResponseModel = modelMapper.map(userDto, UserResponseModel.class);
 		return ResponseEntity.status(HttpStatus.OK).body(userResponseModel);
 	}
+	
+	@GetMapping(value = "/feign/{userId}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<UserResponseModel> getUserFiegnClient(@PathVariable String userId) {
+		
+		UserDto userDto=userService.getUserByUserIdUsingFeign(userId);
+		ModelMapper modelMapper = Util.getModelMapper();
+		UserResponseModel userResponseModel = modelMapper.map(userDto, UserResponseModel.class);
+		return ResponseEntity.status(HttpStatus.OK).body(userResponseModel);
+	}
 
 }
