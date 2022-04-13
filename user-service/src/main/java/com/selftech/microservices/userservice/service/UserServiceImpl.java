@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.selftech.microservices.userservice.entity.UserEntity;
+import com.selftech.microservices.userservice.feignclient.AlbumServiceClient;
 import com.selftech.microservices.userservice.model.AlbumResponseModel;
 import com.selftech.microservices.userservice.repository.UserRepository;
 import com.selftech.microservices.userservice.shared.UserDto;
@@ -29,14 +30,16 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 	RestTemplate restTemplate;
+	AlbumServiceClient albumServiceClient;
 	Environment env;
 
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-			RestTemplate restTemplate, Environment env) {
+			RestTemplate restTemplate, AlbumServiceClient albumServiceClient, Environment env) {
 		this.userRepository = userRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.restTemplate = restTemplate;
+		this.albumServiceClient = albumServiceClient;
 		this.env = env;
 	}
 
@@ -74,19 +77,30 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUserByUserId(String userId) {
-		UserEntity userEntity = userRepository.findByUserId(userId);
-		if (userEntity == null) {
-			throw new UsernameNotFoundException(userId);
-		}
-		ModelMapper mapper = Util.getModelMapper();
-		UserDto userDto = mapper.map(userEntity, UserDto.class);
-		// String albumUrl = "http://ALBUMS-WS/users/123456/albums";
+		UserDto userDto = getUserEntity(userId);
 		String albumUrl = String.format(env.getProperty("albums.url"), userId);
 		ResponseEntity<List<AlbumResponseModel>> albumListResponse = restTemplate.exchange(albumUrl, HttpMethod.GET,
 				null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
 				});
 		userDto.setAlbums(albumListResponse.getBody());
 		return userDto;
+	}
+
+	@Override
+	public UserDto getUserByUserIdUsingFeign(String userId) {
+		UserDto userDto = getUserEntity(userId);
+		List<AlbumResponseModel> albums = albumServiceClient.getAlbums(userId);
+		userDto.setAlbums(albums);
+		return userDto;
+	}
+
+	private UserDto getUserEntity(String userId) {
+		UserEntity userEntity = userRepository.findByUserId(userId);
+		if (userEntity == null) {
+			throw new UsernameNotFoundException(userId);
+		}
+		ModelMapper mapper = Util.getModelMapper();
+		return mapper.map(userEntity, UserDto.class);
 	}
 
 }
