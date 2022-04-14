@@ -36,3 +36,6 @@ ip:
     
 albums:
   url: http://ALBUMS-WS/users/%s/albums
+logging:
+  level:
+    '[com.selftech.microservices.userservice.feignclient.AlbumServiceClient]': DEBUG

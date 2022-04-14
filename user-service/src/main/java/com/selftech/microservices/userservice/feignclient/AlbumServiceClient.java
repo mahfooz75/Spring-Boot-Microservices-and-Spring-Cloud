@@ -11,7 +11,7 @@ import com.selftech.microservices.userservice.model.AlbumResponseModel;
 @FeignClient(name = "albums-ws")
 public interface AlbumServiceClient {
 
-	@GetMapping("/users/{id}/albums")
+	@GetMapping("/users/{id}/albumss")
 	public List<AlbumResponseModel> getAlbums(@PathVariable String id);
 
 }
