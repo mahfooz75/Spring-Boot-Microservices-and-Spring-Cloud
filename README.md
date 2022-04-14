@@ -1,7 +1,7 @@
 # Spring-Boot-Microservices-and-Spring-Cloud  
 ### Following Microservices created  
-- API-GATEWAY (Using spring cloud gateway)
-- DISCOVERY-SERVICE (Using Eureka)
+- API-GATEWAY (Using spring cloud gateway) running on port 8082
+- DISCOVERY-SERVICE (Using Eureka) running on port 8010
 - ACCOUNT-MANAGEMENT-SERVICE
 - PHOTO-ALBUM-SERVICE
 - USER-SERVICE
