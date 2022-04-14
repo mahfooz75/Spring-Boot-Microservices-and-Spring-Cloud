@@ -24,7 +24,10 @@ import com.selftech.microservices.userservice.repository.UserRepository;
 import com.selftech.microservices.userservice.shared.UserDto;
 import com.selftech.microservices.userservice.shared.Util;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 	UserRepository userRepository;
@@ -89,7 +92,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getUserByUserIdUsingFeign(String userId) {
 		UserDto userDto = getUserEntity(userId);
-		List<AlbumResponseModel> albums = albumServiceClient.getAlbums(userId);
+		List<AlbumResponseModel> albums = null;
+		try {
+			albums = albumServiceClient.getAlbums(userId);
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+		}
 		userDto.setAlbums(albums);
 		return userDto;
 	}
